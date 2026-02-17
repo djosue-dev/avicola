@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Registro de Venta</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            padding: 20px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 400px;
+            margin-top: 10px;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 6px;
+            text-align: center;
+        }
+
+        button {
+            padding: 6px 10px;
+            margin-top: 5px;
+        }
+    </style>
+
+</head>
+<body>
+
+<h2>Registrar Venta</h2>
+
+<label>Cliente:</label>
+<select id="cliente">
+    <option value="">Seleccione cliente</option>
+    <option value="1">Cliente A</option>
+    <option value="2">Cliente B</option>
+</select>
+
+<h3>Tinas vendidas</h3>
+
+<input type="number" id="pesoTina" placeholder="Peso de la tina (kg)">
+<button onclick="agregarTina()">Agregar tina</button>
+
+<table>
+    <thead>
+    <tr>
+        <th>Tina</th>
+        <th>Peso</th>
+        <th>Acción</th>
+    </tr>
+    </thead>
+    <tbody id="tablaDetalles">
+    </tbody>
+</table>
+
+<h3>Total kilos: <span id="totalPeso">0</span> kg</h3>
+
+<button onclick="guardarVenta()">Guardar Venta</button>
+
+<script>
+    let detalles = [];
+
+    function agregarTina() {
+        const pesoInput = document.getElementById("pesoTina");
+        const peso = parseFloat(pesoInput.value);
+
+        if (!peso || peso <= 0) return;
+
+        detalles.push({
+            numeroTina: detalles.length + 1,
+            peso: peso
+        });
+
+        pesoInput.value = "";
+        renderTabla();
+    }
+
+    function eliminarTina(index) {
+        detalles.splice(index, 1);
+
+        // reenumerar tinas
+        detalles.forEach((d, i) => {
+            d.numeroTina = i + 1;
+        });
+
+        renderTabla();
+    }
+
+    function renderTabla() {
+        const tabla = document.getElementById("tablaDetalles");
+        tabla.innerHTML = "";
+
+        let total = 0;
+
+        detalles.forEach((d, index) => {
+            total += d.peso;
+
+            tabla.innerHTML += `
+                <tr>
+                    <td>${d.numeroTina}</td>
+                    <td>${d.peso} kg</td>
+                    <td>
+                        <button onclick="eliminarTina(${index})">
+                            Eliminar
+                        </button>
+                    </td>
+                </tr>
+            `;
+        });
+
+        document.getElementById("totalPeso").innerText = total;
+    }
+
+    function guardarVenta() {
+        const cliente = document.getElementById("cliente").value;
+
+        if (!cliente || detalles.length === 0) {
+            alert("Complete cliente y tinas");
+            return;
+        }
+
+        const venta = {
+            clienteId: cliente,
+            detalles: detalles
+        };
+
+        console.log("Venta enviada:", venta);
+        alert("Venta guardada (simulación)");
+    }
+</script>
+
+</body>
+</html>
