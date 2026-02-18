@@ -7,6 +7,5 @@ public record DatosResgitroDetalleVenta(
         int numeroTina,
         Double peso,
         Double precioKilo,
-        Double subtotal
-) {
+        Double subtotal) {
 }
